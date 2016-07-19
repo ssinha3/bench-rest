@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /*
-  Command line runner for running bench-rest flows
+ Command line runner for running bench-rest flows
 
-  # run 1000 iterations with 10 concurrent users against flow defined in ./flow.js
-  bench-rest -n 1000 -c 10 './flow.js'
-*/
+ # run 1000 iterations with 10 concurrent users against flow defined in ./flow.js
+ bench-rest -n 1000 -c 10 './flow.js'
+ */
 
 var prog = require('commander');
 var fs = require('fs');
@@ -18,16 +18,16 @@ var package = JSON.parse(packageJSON);
 var VERSION = package.version;
 
 prog
-  .version(VERSION)
-  .usage('[options] <flow-js-path-or-GET-URL>')
-  .option('-n --iterations <integer>', 'Number of iterations to run, defaults to 1')
-  .option('-a --prealloc <integer>', 'Max iterations to preallocate, defaults 100000')
-  .option('-c --concurrency <integer>', 'Concurrent operations, defaults to 10')
-  .option('-d --progress <integer>', 'Display progress bar (> 0), update every N ms, defaults 1000')
-  .option('-u --user <username>', 'User for basic authentication, default no auth')
-  .option('-p --password <password>', 'Password for basic authentication')
-  .option('-e --evaluate <flow-string>', 'Evaluate flow from string, not file')
-  .parse(process.argv);
+    .version(VERSION)
+    .usage('[options] <flow-js-path-or-GET-URL>')
+    .option('-n --iterations <integer>', 'Number of iterations to run, defaults to 1')
+    .option('-a --prealloc <integer>', 'Max iterations to preallocate, defaults 100000')
+    .option('-c --concurrency <integer>', 'Concurrent operations, defaults to 10')
+    .option('-d --progress <integer>', 'Display progress bar (> 0), update every N ms, defaults 1000')
+    .option('-u --user <username>', 'User for basic authentication, default no auth')
+    .option('-p --password <password>', 'Password for basic authentication')
+    .option('-e --evaluate <flow-string>', 'Evaluate flow from string, not file')
+    .parse(process.argv);
 
 var execName = prog._name;
 
@@ -89,14 +89,14 @@ if (!flow) {
       process.exit(4);
     }
     flow = require(absPathFlowJS);
-    flowFromMsg = 'Using flow from: ' + absPathFlowJS;
+    flowFromMsg = 'Using flow from - Shayan: ' + absPathFlowJS;
   }
 }
 
 
 
 var msg = 'Benchmarking ' + iterations + ' iteration(s) using up to ' +
-  concurrency + ' concurrent connections';
+    concurrency + ' concurrent connections';
 if (user) {
   msg += ' using basic auth user ';
   msg += user;
@@ -133,16 +133,16 @@ function updateBar(percentNow, concurrent, ips) {
 }
 
 benchrest(flow, runOptions)
-  .on('error', function (err, ctxName) { console.error('\nFailed in %s, err: ', ctxName, err); })
-  .on('progress', function (stats, percent, concurrent, ips) { // only if progress enabled
-    updateBar(percent, concurrent, ips);
-  })
-  .on('end', function (stats, errorCount) {
-    updateBar(100, 0, (stats.main) ? Math.round(stats.main.meter.mean) : 0);
-    console.log('\n\nerrors: ', errorCount);
-    console.log('stats: ', stats);
-    process.exit(errorCount);
-  });
+    .on('error', function (err, ctxName) { console.error('\nFailed in %s, err: ', ctxName, err); })
+    .on('progress', function (stats, percent, concurrent, ips) { // only if progress enabled
+      updateBar(percent, concurrent, ips);
+    })
+    .on('end', function (stats, errorCount) {
+      updateBar(100, 0, (stats.main) ? Math.round(stats.main.meter.mean) : 0);
+      console.log('\n\nerrors: ', errorCount);
+      console.log('stats: ', stats);
+      process.exit(errorCount);
+    });
 
 
 
